@@ -61,7 +61,7 @@ jobs:
       run:
         shell: ${{ matrix.default_shell }}
     env:
-      OPAMROOT: ${{ matrix.opam-root }}      
+      OPAMROOT: ${{ matrix.opam-root }}
       # Force recompilation rather than download the asset
       DKML_BUST_CACHE: true
     steps:
@@ -98,6 +98,12 @@ jobs:
         run: |
           ${{ needs.setup-dkml.outputs.import_func }}
           import ${{ matrix.host_target_abis }}
+
+      - name: Cache Opam downloads by host
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.opam-root }}/download-cache
+          key: ${{ matrix.dkml-host-abi }}
 
       - name: Add Opam pins until published in Opam and possibly fdopen repositories
         run: .github/workflows/scripts/pin-unix-asset.sh
@@ -167,7 +173,7 @@ jobs:
         working-directory: dist
 
       - name: Restructure multi-ABI files
-        run: |          
+        run: |
           _asset="$(pwd)/_asset"
           install -d "$_asset"
 
