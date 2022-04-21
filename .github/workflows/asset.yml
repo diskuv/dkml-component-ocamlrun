@@ -18,7 +18,7 @@ jobs:
     uses: 'diskuv/dkml-workflows/.github/workflows/setup-dkml.yml@main'
     permissions: {} # remove all rights of GITHUB_TOKEN when it is passed to setup-dkml.yml
     with:
-      use-fdopen-opam: false
+      fdopen-opamexe-bootstrap: false
       cache-prefix: v1r2
 
   build-dkml:
@@ -27,44 +27,34 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: windows-2019 # 2019 has Visual Studio 2019
-            host_target_abis: win32-windows_x86
-            dkml-host-abi: windows_x86
-            default_shell: msys2 {0}
-            opam-root: D:/.opam
-            bits: "32"
-          - os: windows-2019 # 2019 has Visual Studio 2019
+          # Compiling ocamlrun does not require ocamlopt; on 64-bit Windows it will build both
+          # windows_x86 and windows_x86_64.
+          # - os: windows-2019
+          #   host_target_abis: win32-windows_x86
+          #   dkml-host-abi: windows_x86
+          #   default_shell: msys2 {0}
+          #   opam-root: D:/.opam
+          - os: windows-2019
             host_target_abis: win32-windows_x86_64
             dkml-host-abi: windows_x86_64
             default_shell: msys2 {0}
             opam-root: D:/.opam
-            bits: "64"
           - os: macos-latest
             host_target_abis: macos-darwin_all
             dkml-host-abi: darwin_x86_64
             default_shell: sh
             opam-root: /Users/runner/.opam
-            bits: "64"
           - os: ubuntu-latest
             host_target_abis: manylinux2014-linux_x86
-            bits: "32"
-            comment: (CentOS 7, etc.)
             default_shell: sh
             dkml-host-abi: linux_x86
             opam-root: .ci/opamroot # local directory of $GITHUB_WORKSPACE so available to dockcross
             in_docker: "true"
-            dockcross_image: dockcross/manylinux2014-x86
-            #   Gets rid of: WARNING: The requested image's platform (linux/386) does not match the detected host platform (linux/amd64) and no specific platform was requested
-            dockcross_run_extra_args: --platform linux/386
           - os: ubuntu-latest
             host_target_abis: manylinux2014-linux_x86_64
-            bits: "64"
-            comment: (CentOS 7, etc.)
             default_shell: sh
             dkml-host-abi: linux_x86_64
             opam-root: .ci/opamroot # local directory of $GITHUB_WORKSPACE so available to dockcross
-            dockcross_image: dockcross/manylinux2014-x64
-            in_docker: "true"
     runs-on: ${{ matrix.os }}
     name: build-${{ matrix.host_target_abis }}
     defaults:
@@ -144,7 +134,7 @@ jobs:
 
       # Bundle up single-arch asset
 
-      - name: Bundle up single-arch asset
+      - name: Bundle up single-ABI asset
         run: |
           #!/bin/sh
           set -eufx
@@ -177,19 +167,22 @@ jobs:
         working-directory: dist
 
       - name: Restructure multi-ABI files
-        working-directory: dist
-        run: |
+        run: |          
+          _asset="$(pwd)/_asset"
+          install -d "$_asset"
+
+          cd dist
           find . -mindepth 1 -maxdepth 1 -type d | while read -r distname; do
-            tar xvCfz $distname $distname/$distname.tar.gz
+            tar xvCfz "$_asset" $distname/$distname.tar.gz
             rm -f $distname/$distname.tar.gz
           done
 
       - name: Display restructured files
         run: ls -R
-        working-directory: dist
+        working-directory: _asset
 
-      - name: Bundle up multi-arch asset
-        run:  tar cvCfz dist $GITHUB_WORKSPACE/$COMPONENT.tar.gz .
+      - name: Bundle up multi-ABI asset
+        run:  tar cvCfz _asset $GITHUB_WORKSPACE/$COMPONENT.tar.gz .
 
       - name: Release
         uses: softprops/action-gh-release@v1
