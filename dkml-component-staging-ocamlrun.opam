@@ -35,6 +35,25 @@ build: [
   #   <dkmldir>/vendor/dkml-compiler/
   ["install" "-d" "dkmldir/vendor/dkml-compiler/src"]
   ["tar" "xCfz" "dkmldir/vendor/dkml-compiler" "dl/dkml-compiler.tar.gz" "--strip-components=1"]
+
+  # --------------
+  # Build component and .api library
+  # --------------
+
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "--promote-install-files=false"
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+  ["dune" "install" "-p" name "--create-install-files" name]
 ]
 install: [
   # --------------
@@ -121,26 +140,6 @@ install: [
 
   [ "rm" "-rf" "%{_:share}%/staging-files/share" ]
   [ "rm" "-rf" "%{_:share}%/staging-files/src" ]
-
-  # --------------
-  # Build install plugin and .api library
-  # --------------
-
-  ["dune" "subst"] {dev}
-  [
-    "dune"
-    "build"
-    "-p"
-    name
-    "-j"
-    jobs
-    "--promote-install-files=false"
-    "@install"
-    "@runtest" {with-test}
-    "@doc" {with-doc}
-  ]
-  ["dune" "install" "-p" name "--create-install-files" name]
-
 ]
 dev-repo: "git+https://github.com/diskuv/dkml-component-ocamlcompiler.git"
 extra-source "dl/ocaml.tar.gz" {
