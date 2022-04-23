@@ -11,7 +11,6 @@ on:
 jobs:
   # Notify Installers on GitHub
   github-notify:
-    if: false # DISABLE UNTIL TESTING IN dkml-installer-ocaml is needed
     strategy:
       fail-fast: true
       matrix:
@@ -25,4 +24,4 @@ jobs:
           REPOSITORY: ${{ matrix.repository }}
           GITHUB_TOKEN: ${{ secrets.TRIGGER_DKML_INSTALLER_OCAML }}
         run: |
-          set -x && gh workflow --repo "${REPOSITORY}" run package.yml -f dkml-component-ocamlcompiler=${GITHUB_SHA} -f populate-cache=false
+          set -x && gh workflow --repo "${REPOSITORY}" run package.yml -f dkml-component-ocamlrun=${GITHUB_SHA}
