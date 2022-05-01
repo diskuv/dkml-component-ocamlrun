@@ -31,7 +31,7 @@ let get_and_remove_path env =
 
 let spawn_ocamlrun ctx cmd =
   let lib_ocaml = lib_ocaml ctx in
-  let host_abi = ctx.host_abi_v2 in
+  let host_abi = ctx.target_abi_v2 in
   let new_cmd = Cmd.(v (Fpath.to_string (ocamlrun_exe ctx)) %% cmd) in
   Logs.info (fun m -> m "Running bytecode with: %a" Cmd.pp new_cmd);
   let ( let* ) = Result.bind in
