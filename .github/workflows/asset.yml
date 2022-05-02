@@ -19,7 +19,6 @@ jobs:
     permissions: {} # remove all rights of GITHUB_TOKEN when it is passed to setup-dkml.yml
     with:
       fdopen-opamexe-bootstrap: false
-      cache-prefix: v1r2
 
   build-dkml:
     needs: setup-dkml
