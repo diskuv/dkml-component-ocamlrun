@@ -1,5 +1,4 @@
 open Bos
-open Dkml_install_api
 open Astring
 
 let is_not_defined name env =
@@ -77,19 +76,26 @@ let spawn_ocamlrun ctx cmd =
     in
     OS.Cmd.run_status ~env:new_env new_cmd
   in
+  let fl = Dkml_install_api.Forward_progress.stderr_fatallog in
   match sequence with
   | Ok (`Exited 0) ->
       Logs.info (fun m -> m "The command %a ran successfully" Cmd.pp cmd)
   | Ok (`Exited c) ->
-      raise
-        (Installation_error
-           (Fmt.str "The command %a exited with status %d" Cmd.pp cmd c))
+      fl ~id:"98b534b7"
+        (Fmt.str "The command %a exited with status %d" Cmd.pp cmd c);
+      exit
+        (Dkml_install_api.Forward_progress.Exit_code.to_int_exitcode
+           Exit_transient_failure)
   | Ok (`Signaled c) ->
-      raise
-        (Installation_error
-           (Fmt.str "The command %a terminated from a signal %d" Cmd.pp cmd c))
+      fl ~id:"dc5eac2d"
+        (Fmt.str "The command %a terminated from a signal %d" Cmd.pp cmd c);
+      exit
+        (Dkml_install_api.Forward_progress.Exit_code.to_int_exitcode
+           Exit_transient_failure)
   | Error rmsg ->
-      raise
-        (Installation_error
-           (Fmt.str "The command %a could not be run due to: %a" Cmd.pp cmd
-              Rresult.R.pp_msg rmsg))
+      fl ~id:"41d4fc65"
+        (Fmt.str "The command %a could not be run due to: %a" Cmd.pp cmd
+           Rresult.R.pp_msg rmsg);
+      exit
+        (Dkml_install_api.Forward_progress.Exit_code.to_int_exitcode
+           Exit_transient_failure)
