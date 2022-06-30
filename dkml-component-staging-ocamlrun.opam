@@ -31,6 +31,10 @@ build: [
   ["install" "-d" "dkmldir/vendor/dkml-compiler/src"]
   ["tar" "xCfz" "dkmldir/vendor/dkml-compiler" "dl/dkml-compiler.tar.gz" "--strip-components=1"]
 
+  # Developers:
+  #   Uncomment to test your own scripts
+  #[ "diskuvbox" "copy-file" "r-c-ocaml-1-setup.sh" "dkmldir/vendor/dkml-compiler/src/r-c-ocaml-1-setup.sh" ]
+
   # --------------
   # Build component and .api library
   # --------------
@@ -58,7 +62,6 @@ install: [
   # [1] Run r-c-ocaml-1-setup.sh
   [
     "env" "TOPDIR=dkmldir/vendor/drc/all/emptytop"
-      "bash" "-x"
       "dkmldir/vendor/dkml-compiler/src/r-c-ocaml-1-setup.sh"
       "-d" "dkmldir"
       "-f" "src/ocaml-1"
