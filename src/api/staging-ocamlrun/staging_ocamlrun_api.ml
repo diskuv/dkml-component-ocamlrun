@@ -81,8 +81,17 @@ let spawn_ocamlrun ctx cmd =
   | Ok (`Exited 0) ->
       Logs.info (fun m -> m "The command %a ran successfully" Cmd.pp cmd)
   | Ok (`Exited c) ->
-      fl ~id:"98b534b7"
-        (Fmt.str "The command %a exited with status %d" Cmd.pp cmd c);
+      (* An exit code from one of the predefined exit codes already has
+         the root cause printed. Don't obscure the console by printing
+         more errors. *)
+      let conforming_exitcode =
+        List.map Dkml_install_api.Forward_progress.Exit_code.to_int_exitcode
+          Dkml_install_api.Forward_progress.Exit_code.values
+        |> List.mem c
+      in
+      if not conforming_exitcode then
+        fl ~id:"98b534b7"
+          (Fmt.str "The command %a exited with status %d" Cmd.pp cmd c);
       exit
         (Dkml_install_api.Forward_progress.Exit_code.to_int_exitcode
            Exit_transient_failure)
