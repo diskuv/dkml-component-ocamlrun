@@ -14,7 +14,7 @@ FIRST, add a dependency to your .opam file:
 
 ```ocaml
 depends: [
-  "dkml-component-staging-ocamlrun"   {>= "4.12.1"}
+  "dkml-component-staging-ocamlrun"   {>= "4.12.1~" & < "4.12.2~"}
   # ...
 ]
 ```
