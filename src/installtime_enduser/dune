@@ -1,0 +1,28 @@
+(executable
+ (package dkml-component-offline-ocamlrun)
+ (name install)
+ (public_name offline_ocamlrun_install)
+ (modes
+  (byte exe))
+ (libraries bos diskuvbox))
+
+(install
+ (package dkml-component-offline-ocamlrun)
+ (section share)
+ (files
+  (install.bc as staging-files/generic/install.bc)))
+
+(rule
+ (alias runtest)
+ (package dkml-component-offline-ocamlrun)
+ (deps
+  (:bc install.bc))
+ (action
+  (progn
+   (with-stdout-to
+    info.txt
+    (run ocamlobjinfo %{bc}))
+   (with-stdout-to
+    dlls.corrected.txt
+    (run awk "/.*:/ {x=0} /Used DLLs:/{x=1} x==1 {print}" info.txt))
+   (diff? dlls.txt dlls.corrected.txt))))

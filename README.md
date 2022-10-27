@@ -67,6 +67,37 @@ let execute ctx =
 
 See [the Contributors section of dkml-install-api](https://github.com/diskuv/dkml-install-api/blob/main/contributors/README.md).
 
+To run the ocamlrun installer, do:
+
+```bash
+# 1. EITHER: download some version of the already-built ocamlrun component
+URL=https://github.com/diskuv/dkml-component-ocamlrun/releases/download/v0.4.1-prerel6/dkml-component-staging-ocamlrun.tar.gz
+install -d dist
+if command -v wget; then
+  wget -O dist/dkml-component-staging-ocamlrun.tar.gz "$URL"
+else
+  curl -L -o dist/dkml-component-staging-ocamlrun.tar.gz "$URL"
+fi
+(cd dist && tar xfz dkml-component-staging-ocamlrun.tar.gz)
+STAGING_FILES=$PWD/dist/staging-files
+
+# 1. OR: build the full ocamlrun component (all working files must be in a 'git commit')
+opam install .
+STAGING_FILES=$(opam var dkml-component-staging-ocamlrun:share)/staging-files
+
+# 2. Build
+dune build
+
+# 3. Run
+ABI=darwin_x86_64 # select the correct ABI; see the choices in $STAGING_FILES
+ocamlrun _build/install/default/share/dkml-component-offline-ocamlrun/staging-files/generic/install.bc \
+  --source-dir "$STAGING_FILES/$ABI" \
+  --target-dir dist/installed
+
+# Look in dist/installed to see what was installed
+dist/installed/bin/ocamlc -config
+```
+
 ## Status
 
 | Status                                                                                                                                                                                      |

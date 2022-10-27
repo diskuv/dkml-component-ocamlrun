@@ -1,4 +1,11 @@
 (library
  (public_name dkml-component-staging-ocamlrun)
  (name dkml_component_staging_ocamlrun)
+ (modules dkml_component_staging_ocamlrun)
  (libraries dkml-install.register))
+
+(library
+ (public_name dkml-component-offline-ocamlrun)
+ (name dkml_component_offline_ocamlrun)
+ (modules dkml_component_offline_ocamlrun)
+ (libraries dkml-install.register dkml-component-staging-ocamlrun.api))
