@@ -1,3 +1,19 @@
+# Opam
+_opam/
+
+# Visual Studio Code
+.vscode/settings.json
+
+# Dune
 _build/
-_work/
 /*.install
+
+# GitHub Actions
+/download-cache/
+
+#   direnv (https://direnv.net/)
+.envrc
+
+# CI
+.ci/
+dist/
