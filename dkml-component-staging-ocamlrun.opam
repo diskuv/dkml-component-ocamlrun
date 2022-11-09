@@ -64,6 +64,16 @@ install: [
   # First pass
   # --------------
 
+  # [0] Avoid permission denied copying onto read-only files in step [1]
+  [
+    "sh" "-eufxc" """
+    if [ -e '%{_:share}%/staging-files' ]; then
+      chmod -R u+w '%{_:share}%/staging-files'
+      rm -rf '%{_:share}%/staging-files'
+    fi
+    """
+  ]
+
   # [1] Run r-c-ocaml-1-setup.sh
   [
     "env" "TOPDIR=dkmldir/vendor/drc/all/emptytop"
@@ -88,7 +98,7 @@ install: [
       "-edarwin_arm64"    { os = "macos" & arch = "arm64" }
       #   Cross-compile into staging-files/<cross-abi>
       "-g" "."
-      #   Target architectures (if cross-compiling)
+      #   Target architectures (if cross-compiling; similar to dkml-base-compiler.opam)
       #     TODO: With the -adarwin_x86_64 configuration below, an Apple Silicon machine will produce an arm64 ocamlopt.opt
       #     in the staging-files/darwin_arm64 directory,
       #     and that ocamlopt.opt will create x86_64 OCaml native executables. So that darwin_arm64/bin/ocamlopt.opt will not
