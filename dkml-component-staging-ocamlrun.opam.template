@@ -47,6 +47,16 @@ install: [
   # First pass
   # --------------
 
+  # [0] Avoid permission denied copying onto read-only files in step [1]
+  [
+    "sh" "-eufxc" """
+    if [ -e '%{_:share}%/staging-files' ]; then
+      chmod -R u+w '%{_:share}%/staging-files'
+      rm -rf '%{_:share}%/staging-files'
+    fi
+    """
+  ]
+
   # [1] Run r-c-ocaml-1-setup.sh
   [
     "env" "TOPDIR=dkmldir/vendor/drc/all/emptytop"
