@@ -79,8 +79,13 @@ let spawn_ocamlrun ctx cmd =
   let fl = Dkml_install_api.Forward_progress.stderr_fatallog in
   match sequence with
   | Ok (`Exited 0) ->
-      Logs.info (fun m -> m "The command %a ran successfully" Cmd.pp cmd)
-  | Ok (`Exited c) ->
+      if Logs.level () = Some Logs.Debug then
+        Logs.info (fun l ->
+            l "The command %a ran successfully" Cmd.pp cmd)
+      else
+        Logs.info (fun l ->
+          l "The command %a ran successfully" Fmt.(option string) (Cmd.line_tool cmd))
+| Ok (`Exited c) ->
       (* An exit code from one of the predefined exit codes already has
          the root cause printed. Don't obscure the console by printing
          more errors. *)
