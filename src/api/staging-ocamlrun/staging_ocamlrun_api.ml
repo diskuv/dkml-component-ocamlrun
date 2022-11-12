@@ -66,13 +66,10 @@ let spawn_ocamlrun ctx cmd =
           String.Map.add "DYLD_FALLBACK_LIBRARY_PATH"
             Fpath.(to_string stublibs)
             new_env
-      | _
-        when Dkml_install_api.Context.Abi_v2.is_linux host_abi
-             || Dkml_install_api.Context.Abi_v2.is_android host_abi ->
+      | _ ->
           (* Add lib/ocaml/stublibs to LD_LIBRARY_PATH for Linux and Android
-             to locate the dllunix.so *)
+             and OpenBSD (etc.) to locate the dllunix.so *)
           String.Map.add "LD_LIBRARY_PATH" Fpath.(to_string stublibs) new_env
-      | _ -> new_env
     in
     OS.Cmd.run_status ~env:new_env new_cmd
   in
