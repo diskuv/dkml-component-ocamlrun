@@ -16,4 +16,5 @@ opamrun pin dkml-component-network-unixutils     'https://github.com/diskuv/dkml
 #   +-
 # Example: https://github.com/diskuv/dkml-component-ocamlcompiler/runs/6060230260?check_suite_focus=true
 # So pin it instead of download from Opam cache
-opamrun pin uucp                                 'git+https://erratique.ch/repos/uucp.git#v14.0.0' --no-action --yes
+#opamrun pin uucp                                 'git+https://erratique.ch/repos/uucp.git#v14.0.0' --no-action --yes
+opamrun pin remove uucp --no-action --yes || true
