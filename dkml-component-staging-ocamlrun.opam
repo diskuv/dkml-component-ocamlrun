@@ -3,7 +3,7 @@ opam-version: "2.0"
 version: "4.12.1~v1.0.2"
 synopsis: "DKML staging component for ocamlrun"
 description:
-  "Standalone distribution of OCaml in <share>/staging-files containing just ocamlrun, the OCaml Stdlib and the other OCaml libraries (str, unix, bigarray, etc.)"
+  "Standalone bytecode distribution of OCaml in <share>/staging-files containing just ocamlrun, the OCaml Stdlib and the other OCaml libraries (str, unix, bigarray, etc.)"
 maintainer: ["opensource+diskuv-ocaml@support.diskuv.com"]
 authors: ["Diskuv, Inc. <opensource+diskuv-ocaml@support.diskuv.com>"]
 license: "Apache-2.0"
@@ -12,6 +12,8 @@ bug-reports: "https://github.com/diskuv/dkml-component-ocamlrun/issues"
 depends: [
   "dune" {>= "2.9"}
   "dkml-install" {>= "0.2.0"}
+  "dkml-runtime-common" {>= "1.0.2~prerel9"}
+  "diskuvbox" {>= "0.1.0"}
   "odoc" {with-doc}
 ]
 dev-repo: "git+https://github.com/diskuv/dkml-component-ocamlrun.git"
@@ -27,10 +29,10 @@ build: [
 
   # Create a DKMLDIR. Its structure mimics a git submodule setup.
   #   <dkmldir>/vendor/drc/
-  ["install" "-d" "dkmldir/vendor/drc"]
-  ["tar" "xCfz" "dkmldir/vendor/drc" "dl/dkml-runtime-common.tar.gz" "--strip-components=1"]
+  ["diskuvbox" "copy-dir" "%{dkml-runtime-common:lib}%/all" "dkmldir/vendor/drc/all"]
+  ["diskuvbox" "copy-dir" "%{dkml-runtime-common:lib}%/unix" "dkmldir/vendor/drc/unix"]
   #   <dkmldir>/.dkmlroot
-  ["install" "dkmldir/vendor/drc/.template.dkmlroot" "dkmldir/.dkmlroot"]
+  ["diskuvbox" "copy-file" "%{dkml-runtime-common:lib}%/template.dkmlroot" "dkmldir/.dkmlroot"]
 
   #   <dkmldir>/vendor/dkml-compiler/
   ["install" "-d" "dkmldir/vendor/dkml-compiler/src"]
@@ -193,15 +195,9 @@ extra-source "dl/dkml-compiler.tar.gz" {
     "sha256=f0292218c2608eaa8a14d24e307b49ef7921b1b44e8670e79568c6297e9de455"
   ]
 }
-extra-source "dl/dkml-runtime-common.tar.gz" {
-  src: "https://github.com/diskuv/dkml-runtime-common/archive/refs/tags/1.0.2-prerel9.tar.gz"
-  checksum: [
-    "sha256=fe9d2c9617b5ff4c8fa7d6b666160beedac6e1121fdf66a748d6b37541d6ce0c"
+pin-depends: [
+  [
+    "dkml-runtime-common.1.0.2~prerel9"
+    "git+https://github.com/diskuv/dkml-runtime-common.git"
   ]
-}
-extra-source "dl/dkml-runtime-distribution.tar.gz" {
-  src: "https://github.com/diskuv/dkml-runtime-distribution/archive/refs/tags/1.0.2-prerel9.tar.gz"
-  checksum: [
-    "sha256=8581644c60a77022546521e247d49d9ad9722c76fee89bdca42a6044fc240369"
-  ]
-}
+]
