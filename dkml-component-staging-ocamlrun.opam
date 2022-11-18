@@ -83,7 +83,7 @@ install: [
       "dkmldir/vendor/dkml-compiler/src/r-c-ocaml-1-setup.sh"
       "-d" "dkmldir"
       "-f" "src/ocaml-1"
-      "-k" "vendor/dkml-compiler/src/standard-compiler-env-to-ocaml-configure-env.sh"
+      "-k" "vendor/dkml-compiler/env/standard-compiler-env-to-ocaml-configure-env.sh"
       "-v" "dl/ocaml"
       #   Host-compile into staging-files/<host-abi>
       "-t" "%{_:share}%/staging-files"
@@ -113,8 +113,8 @@ install: [
       #     -adarwin_x86_64-darwin_arm64. But that cross specification has ripple effects that needs time (technical debt) to
       #     get right. Luckily our build machines are always Apple x86_64 (GitHub Actions and GitLab CI/CD), and even if the
       #     build machines were Apple Silicon we typically only care about the generated artifacts (the target ABI).
-      "-adarwin_x86_64=vendor/dkml-compiler/src/standard-compiler-env-to-ocaml-configure-env.sh" { os = "macos" & arch = "arm64" }
-      "-adarwin_arm64=vendor/dkml-compiler/src/standard-compiler-env-to-ocaml-configure-env.sh"  { os = "macos" & arch = "x86_64" }
+      "-adarwin_x86_64=vendor/dkml-compiler/env/standard-compiler-env-to-ocaml-configure-env.sh" { os = "macos" & arch = "arm64" }
+      "-adarwin_arm64=vendor/dkml-compiler/env/standard-compiler-env-to-ocaml-configure-env.sh"  { os = "macos" & arch = "x86_64" }
       #     For any non cross-compiling platforms we save time and space by
       #     only building the runtime.
       "-r"                                        { os = "win32" | (os = "linux" & (arch = "x86_32" | arch = "x86_64")) }
@@ -151,7 +151,7 @@ install: [
       "-d" "dkmldir"
       "-f" "src/ocaml-2"
       "-r" # Build runtime only
-      "-k" "vendor/dkml-compiler/src/standard-compiler-env-to-ocaml-configure-env.sh"
+      "-k" "vendor/dkml-compiler/env/standard-compiler-env-to-ocaml-configure-env.sh"
       "-v" "dl/ocaml"
       #   Host-compile into staging-files/<host-abi>
       "-t" "%{_:share}%/staging-files"
