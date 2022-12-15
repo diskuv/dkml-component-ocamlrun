@@ -1,4 +1,4 @@
-# staging-ocamlrun 4.12.1
+# staging-ocamlrun 4.14.0
 
 The ocamlrun component is a standalone distribution of OCaml containing
 just `ocamlrun` and the OCaml Stdlib.
@@ -14,7 +14,7 @@ FIRST, add a dependency to your .opam file:
 
 ```ocaml
 depends: [
-  "dkml-component-staging-ocamlrun"   {>= "4.12.1~" & < "4.12.2~"}
+  "dkml-component-staging-ocamlrun"   {>= "4.14.0~" & < "4.14.1~"}
   # ...
 ]
 ```

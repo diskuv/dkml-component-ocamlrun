@@ -155,12 +155,12 @@ install: [
   [ "rm" "-rf" "%{_:share}%/staging-files/src" ]
 ]
 extra-source "dl/ocaml.tar.gz" {
-  src: "https://github.com/ocaml/ocaml/archive/4.12.1.tar.gz"
-  checksum: "sha256=f5a48a90557cb47ace7b1590fcab1362a1af38629a218350f69c225c57e96a41"
+  src: "https://github.com/ocaml/ocaml/archive/4.14.0.tar.gz"
+  checksum: "sha256=39f44260382f28d1054c5f9d8bf4753cb7ad64027da792f7938344544da155e8"
 }
 extra-source "dl/flexdll.tar.gz" {
-  src: "https://github.com/alainfrisch/flexdll/archive/0.39.tar.gz"
-  checksum: "sha256=51a6ef2e67ff475c33a76b3dc86401a0f286c9a3339ee8145053ea02d2fb5974"
+  src: "https://github.com/alainfrisch/flexdll/archive/0.42.tar.gz"
+  checksum: "sha256=a2dce0a0d2f2c5c9f52f65e281db7405f51ff22dc71cdbf494eb241c8a4bdf0f"
 }
 extra-source "dl/homebrew-bundle.tar.gz" {
   src: "https://github.com/Homebrew/homebrew-bundle/archive/4756e4c4cf95485c5ea4da27375946c1dac2c71d.tar.gz"
@@ -171,14 +171,14 @@ extra-source "dl/homebrew-bundle.tar.gz" {
 extra-source "dl/dkml-compiler.tar.gz" {
   # TODO: We need a release process for this, or better yet use a normal Opam dependency that
   # has all the content in a share: or lib: folder.
-  src: "https://github.com/diskuv/dkml-compiler/releases/download/1.0.2-prerel9-r3/src.tar.gz"
+  src: "https://github.com/diskuv/dkml-compiler/releases/download/1.0.2-prerel33/src.tar.gz"
   checksum: [
-    "sha256=63e0fd6ca7c5e0f5a1ef7c9f84c1ee335ec5c95a51952fffa1205a60b7123198"
+    "sha256=51c7cf93886884edb906380fa3c8745a42f57051342bbb4ae6872aeff72ff12d"
   ]
 }
 pin-depends: [
   [
-    "dkml-runtime-common.1.0.2~prerel9"
+    "dkml-runtime-common.1.0.2~prerel33"
     "git+https://github.com/diskuv/dkml-runtime-common.git"
   ]
 ]

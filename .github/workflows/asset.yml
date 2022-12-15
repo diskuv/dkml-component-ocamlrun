@@ -129,7 +129,7 @@ jobs:
 
           # Diagnostics
           set -x
-          b="${{ matrix.opam_root }}"/dkml/.opam-switch/build/$COMPONENT.4.12.1
+          b="${{ matrix.opam_root }}"/dkml/.opam-switch/build/$COMPONENT.4.14.0
           if [ -e $b ]; then
             if [ -x /usr/bin/tree ]; then
               tree -F $b
