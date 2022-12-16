@@ -71,7 +71,7 @@ To run the ocamlrun installer, do:
 
 ```bash
 # 1. EITHER: download some version of the already-built ocamlrun component
-URL=https://github.com/diskuv/dkml-component-ocamlrun/releases/download/v0.4.1-prerel6/dkml-component-staging-ocamlrun.tar.gz
+URL=https://github.com/diskuv/dkml-component-ocamlrun/releases/download/4.14.0-v1.1.0-prerel1/dkml-component-staging-ocamlrun.tar.gz
 install -d dist
 if command -v wget; then
   wget -O dist/dkml-component-staging-ocamlrun.tar.gz "$URL"
