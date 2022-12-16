@@ -171,9 +171,9 @@ extra-source "dl/homebrew-bundle.tar.gz" {
 extra-source "dl/dkml-compiler.tar.gz" {
   # TODO: We need a release process for this, or better yet use a normal Opam dependency that
   # has all the content in a share: or lib: folder.
-  src: "https://github.com/diskuv/dkml-compiler/releases/download/1.0.2-prerel33/src.tar.gz"
+  src: "https://github.com/diskuv/dkml-compiler/releases/download/4.14.0-v1.1.0-prerel1/src.tar.gz"
   checksum: [
-    "sha256=51c7cf93886884edb906380fa3c8745a42f57051342bbb4ae6872aeff72ff12d"
+    "sha256=a1240dcfbedd89ffa79a6046172805535afc9d3198e4e4c9391ec0101e0ce484"
   ]
 }
 pin-depends: [
