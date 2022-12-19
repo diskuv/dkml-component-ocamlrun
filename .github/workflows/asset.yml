@@ -45,30 +45,11 @@ jobs:
             default_shell: msys2 {0}
             msys2_system: CLANG64
             msys2_packages: mingw-w64-clang-x86_64-pkg-config
-          # Got:
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] /Applications/Xcode_14.0.1.app/Contents/Developer/usr/bin/make -C runtime  all
-          #   ...
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] /usr/bin/clang -arch arm64 -c -O2 -fno-strict-aliasing -fwrapv -pthread -Wall -Wdeclaration-after-statement -fno-common -g -arch arm64 -D_FILE_OFFSET_BITS=64 -DCAML_NAME_SPACE  -DCAMLDLLIMPORT=  -o startup_byt.b.o startup_byt.c
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] startup_byt.c:382:49: error: too few arguments to function call, single argument 's' was not specified
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out]          caml_stat_strdup_of_os(OCAML_STDLIB_DIR));
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out]          ~~~~~~~~~~~~~~~~~~~~~~                 ^
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] ./caml/memory.h:161:29: note: 'caml_stat_strdup' declared here
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] CAMLextern caml_stat_string caml_stat_strdup(const char *s);
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out]                             ^
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] 1 error generated.
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] make[1]: *** [startup_byt.b.o] Error 1
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] make[1]: *** Waiting for unfinished jobs....
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] make: *** [makeruntime] Error 2
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] make: INTERNAL: Exiting with 4 jobserver tokens available; should be 3!
-          #   [dkml-component-staging-ocamlrun-4845-b0c3ca.out] FATAL: make -j3 -l3 CAMLDEP=/Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/runtime/ocamlrun /Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/ocamlc -depend CAMLLEX=/Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/runtime/ocamlrun /Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/lex/ocamllex OCAMLLEX=/Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/runtime/ocamlrun /Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/lex/ocamllex CAMLYACC=/Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/yacc/ocamlyacc OCAMLYACC=/Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/yacc/ocamlyacc CAMLRUN=/Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/runtime/ocamlrun OCAMLRUN=/Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/runtime/ocamlrun CAMLC=/usr/bin/env /Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/support/ocamlcHost-final.wrapper OCAMLC=/usr/bin/env /Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/support/ocamlcHost-final.wrapper CAMLOPT=/usr/bin/env /Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/support/ocamloptHost-final.wrapper OCAMLOPT=/usr/bin/env /Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/support/ocamloptHost-final.wrapper OCAMLDOC_RUN=/usr/bin/env CAML_LD_LIBRARY_PATH=/Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/otherlibs/unix:/Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/otherlibs/str /Users/runner/.opam/dkml/share/dkml-component-staging-ocamlrun/staging-files/src/ocaml-1/ocamldoc/ocamldoc NATDYNLINK=true NATDYNLINKOPTS= runtime coreall failed          
-          #
-          # but no problem when done from commandline using XCode 14.1. Perhaps it is a problem with XCode 14.0.1.
-          #
-          # - gh_os: macos-latest
-          #   abi_pattern: macos-darwin_all
-          #   dkml_host_abi: darwin_x86_64
-          #   default_shell: sh
-          #   opam_root: /Users/runner/.opam
+          - gh_os: macos-latest
+            abi_pattern: macos-darwin_all
+            dkml_host_abi: darwin_x86_64
+            default_shell: sh
+            opam_root: /Users/runner/.opam
           - gh_os: ubuntu-latest
             abi_pattern: manylinux2014-linux_x86
             default_shell: sh
