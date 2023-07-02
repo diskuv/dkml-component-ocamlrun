@@ -19,6 +19,7 @@
  (depends
   (dkml-install (>= 0.2.0))
   (dkml-runtime-common (>= 1.0.2~prerel9))
+  dkml-compiler-src
   (diskuvbox (>= 0.1.0))))
 
 (package
