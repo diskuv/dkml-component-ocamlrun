@@ -1,7 +1,7 @@
 (lang dune 2.9)
 
 (name dkml-component-staging-ocamlrun)
-(version 4.14.0~v1.2.1~prerel10)
+(version 4.14.0~v1.2.1~prerel12)
 
 (generate_opam_files true)
 
