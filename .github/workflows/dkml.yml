@@ -108,6 +108,23 @@ jobs:
         if: "!startsWith(matrix.dkml_host_abi, 'windows_')"
         run: ci/build-test.sh
 
+      # Bundle up single-arch asset
+
+      - name: Bundle single-ABI dkml-component-staging-ocamlrun asset
+        run: |
+          #!/bin/sh
+          set -eufx
+          install -d dist
+          share=$(opamrun var dkml-component-staging-ocamlrun:share)
+          opamrun exec -- sh -xc "tar cvCfz '$share' dist/${{matrix.abi_pattern}}.tar.gz ."
+
+      # Upload
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.abi_pattern }}
+          path: dist/${{ matrix.abi_pattern }}.tar.gz
+
       # The .ci/dkml-compilers "post" actions will finalize caching, etc.
 
       - name: Teardown DkML compilers on a Windows host
@@ -121,3 +138,46 @@ jobs:
       - name: Teardown DkML compilers on a Linux host
         if: startsWith(matrix.dkml_host_abi, 'linux_')
         uses: ./.ci/dkml-compilers/gh-linux/post
+
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed for softprops/action-gh-release@v1
+    needs:
+      - build
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: dist
+
+      - name: Remove unneeded artifacts
+        run: rm -rf setup-*
+        working-directory: dist
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: dist
+
+      - name: Restructure multi-ABI files
+        run: |
+          _asset="$(pwd)/_asset"
+          install -d "$_asset"
+
+          cd dist
+          find . -mindepth 1 -maxdepth 1 -type d | while read -r distname; do
+            tar xvCfz "$_asset" $distname/$distname.tar.gz
+            rm -f $distname/$distname.tar.gz
+          done
+
+      - name: Display restructured files
+        run: ls -R
+        working-directory: _asset
+
+      - name: Bundle up multi-ABI asset
+        run:  tar cvCfz _asset $GITHUB_WORKSPACE/$COMPONENT.tar.gz .
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dkml-component-staging-ocamlrun.tar.gz
