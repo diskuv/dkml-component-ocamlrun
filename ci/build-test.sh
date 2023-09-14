@@ -80,3 +80,8 @@ opamrun update
 
 # We need a full opam install to test.
 opamrun install . --with-test --yes
+
+# Bundle single-ABI dkml-component-staging-ocamlrun asset
+install -d dist
+share=$(opamrun var dkml-component-staging-ocamlrun:share)
+opamrun exec -- tar cvCfz "$share" "dist/$abi_pattern.tar.gz" .

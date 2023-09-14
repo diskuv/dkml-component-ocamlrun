@@ -108,16 +108,6 @@ jobs:
         if: "!startsWith(matrix.dkml_host_abi, 'windows_')"
         run: sh ci/build-test.sh
 
-      # Bundle up single-arch asset
-
-      - name: Bundle single-ABI dkml-component-staging-ocamlrun asset
-        run: |
-          #!/bin/sh
-          set -eufx
-          install -d dist
-          share=$(opamrun var dkml-component-staging-ocamlrun:share)
-          opamrun exec -- sh -xc "tar cvCfz '$share' dist/${{matrix.abi_pattern}}.tar.gz ."
-
       # Upload
 
       - uses: actions/upload-artifact@v3
