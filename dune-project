@@ -1,4 +1,4 @@
-(lang dune 2.9)
+(lang dune 3.6)
 
 (name dkml-component-staging-ocamlrun)
 (version 4.14.0~v2.0.3)
