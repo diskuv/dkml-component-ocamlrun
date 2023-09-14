@@ -17,7 +17,7 @@
  (description
   "Standalone bytecode distribution of OCaml in <share>/staging-files containing just ocamlrun, the OCaml Stdlib and the other OCaml libraries (str, unix, bigarray, etc.)")
  (depends
-  (dkml-install (>= 0.2.0))
+  (dkml-install (>= 0.4.0))
   (dkml-runtime-common (>= 1.0.2~prerel9))
   dkml-compiler-src
   (diskuvbox (>= 0.1.0))))
@@ -28,6 +28,6 @@
  (description
   "Standalone bytecode distribution of OCaml in <share>/staging-files containing just ocamlrun, the OCaml Stdlib and the other OCaml libraries (str, unix, bigarray, etc.)")
  (depends
-  (dkml-install (>= 0.2.0))
+  (dkml-install (>= 0.4.0))
   (dkml-component-staging-ocamlrun (= :version))
   (diskuvbox (>= 0.1.0))))
