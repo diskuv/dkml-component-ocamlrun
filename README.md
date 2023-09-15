@@ -102,5 +102,5 @@ dist/installed/bin/ocamlc -config
 
 | Status                                                                                                                                                                                      |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![Asset tests](https://github.com/diskuv/dkml-component-ocamlrun/actions/workflows/asset.yml/badge.svg)](https://github.com/diskuv/dkml-component-ocamlrun/actions/workflows/asset.yml)    |
+| [![Asset tests](https://github.com/diskuv/dkml-component-ocamlrun/actions/workflows/dkml.yml/badge.svg)](https://github.com/diskuv/dkml-component-ocamlrun/actions/workflows/dkml.yml)      |
 | [![Syntax check](https://github.com/diskuv/dkml-component-ocamlrun/actions/workflows/syntax.yml/badge.svg)](https://github.com/diskuv/dkml-component-ocamlrun/actions/workflows/syntax.yml) |
