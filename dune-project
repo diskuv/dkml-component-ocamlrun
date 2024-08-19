@@ -17,6 +17,7 @@
  (description
   "Standalone bytecode distribution of OCaml in <share>/staging-files containing just ocamlrun, the OCaml Stdlib and the other OCaml libraries (str, unix, bigarray, etc.)")
  (depends
+  dkml-host-abi
   (dkml-install (>= 0.4.0))
   (dkml-runtime-common (>= 1.0.2~prerel9))
   (dkml-compiler-src (>= 2.1.0))
