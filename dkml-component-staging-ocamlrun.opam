@@ -11,6 +11,7 @@ homepage: "https://github.com/diskuv/dkml-component-ocamlrun"
 bug-reports: "https://github.com/diskuv/dkml-component-ocamlrun/issues"
 depends: [
   "dune" {>= "3.6"}
+  "dkml-host-abi"
   "dkml-install" {>= "0.4.0"}
   "dkml-runtime-common" {>= "1.0.2~prerel9"}
   "dkml-compiler-src" {>= "2.1.0"}
@@ -18,7 +19,6 @@ depends: [
   "odoc" {with-doc}
 ]
 dev-repo: "git+https://github.com/diskuv/dkml-component-ocamlrun.git"
-available: [ os = "macos" | (os = "linux" & (arch = "x86_32" | arch = "x86_64")) | os = "win32" ]
 build: [
   # OCaml source code
   ["install" "-d" "dl/ocaml/flexdll"]
@@ -88,37 +88,14 @@ install: [
       "-v" "dl/ocaml"
       #   Host-compile into staging-files/<host-abi>
       "-t" "%{_:share}%/staging-files"
-      "-pwindows_x86_64"  { os = "win32" }
-      "-plinux_x86"       { os = "linux" & arch = "x86_32" }
-      "-plinux_x86_64"    { os = "linux" & arch = "x86_64" }
-      "-pdarwin_x86_64"   { os = "macos" & arch = "x86_64" }
-      "-pdarwin_arm64"    { os = "macos" & arch = "arm64" }
+      "-p%{dkml-host-abi:abi}%"
       #   ABIs
-      "-ewindows_x86_64"  { os = "win32" }
-      "-elinux_x86"       { os = "linux" & arch = "x86_32" }
-      "-elinux_x86_64"    { os = "linux" & arch = "x86_64" }
-      "-edarwin_x86_64"   { os = "macos" & arch = "x86_64" }
-      "-edarwin_arm64"    { os = "macos" & arch = "arm64" }
-      #   Cross-compile into staging-files/<cross-abi>
+      "-e%{dkml-host-abi:abi}%"
+      #   Cross-compile into staging-files/<cross-abi>.
+      #   But no cross-compiling, so no [-a] option.
       "-g" "."
-      #   Target architectures (if cross-compiling; similar to dkml-base-compiler.opam)
-      #     TODO: With the -adarwin_x86_64 configuration below, an Apple Silicon machine will produce an arm64 ocamlopt.opt
-      #     in the staging-files/darwin_arm64 directory,
-      #     and that ocamlopt.opt will create x86_64 OCaml native executables. So that darwin_arm64/bin/ocamlopt.opt will not
-      #     run on an x86_64 machine.
-      #     The -adarwin_arm64 configuration is similar but has one important difference. The config will produce an x86_64
-      #     ocamlopt.opt, in the staging-files/darwin_x86_64 directory, and that ocamlopt.opt will create arm64 OCaml native
-      #     executables. But that darwin_x86_64/bin/ocamlopt.opt _will_ run on almost _all_ Apple Silicon (arm64) machines
-      #     because of Rosetta2. The only major exception is Opam CI has disabled Rosetta2 as of Nov 8, 2022.
-      #     Ideally we would have [-aHOST] and [-aHOST-TARGET]. That is: -adarwin_x86_64, -adarwin_arm64 and
-      #     -adarwin_x86_64-darwin_arm64. But that cross specification has ripple effects that needs time (technical debt) to
-      #     get right. Luckily our build machines are always Apple x86_64 (GitHub Actions and GitLab CI/CD), and even if the
-      #     build machines were Apple Silicon we typically only care about the generated artifacts (the target ABI).
-      "-adarwin_x86_64=vendor/dkml-compiler/env/standard-compiler-env-to-ocaml-configure-env.sh" { os = "macos" & arch = "arm64" }
-      "-adarwin_arm64=vendor/dkml-compiler/env/standard-compiler-env-to-ocaml-configure-env.sh"  { os = "macos" & arch = "x86_64" }
-      #     For any non cross-compiling platforms we save time and space by
-      #     only building the runtime.
-      "-r"                                        { os = "win32" | (os = "linux" & (arch = "x86_32" | arch = "x86_64")) }
+      #   We save time and space by only building the runtime.
+      "-r"
   ]
 
   # [1] Run r-c-ocaml-2-build_host-noargs.sh
@@ -127,46 +104,6 @@ install: [
     "cd '%{_:share}%/staging-files' && echo 1 - host && share/dkml/repro/100co/vendor/dkml-compiler/src/r-c-ocaml-2-build_host-noargs.sh"
   ]
 
-  # [1] Run r-c-ocaml-3-build_cross-noargs.sh if cross-compiling,
-  # which will place its output into staging-files/<cross-abi>
-  # (confer: "-g" "%{_:share}%/staging-files")
-  [
-    "sh" "-eufc"
-    "cd '%{_:share}%/staging-files' && echo 1 - cross && share/dkml/repro/100co/vendor/dkml-compiler/src/r-c-ocaml-3-build_cross-noargs.sh"
-  ] { os = "macos" }
-
-  # --------------
-  # Second pass
-  #   For platforms that can do multiple _host_ ABIs _without_ cross-compiling.
-  #   * MSVC can trivially do 32-bit and 64-bit without cross-compiling.
-  #   * Most often Linux can as well as long as `gcc -m32` is configured.
-  #     However for ease of use in GitHub Actions we expect Linux 32-bit and
-  #     Linux 64-bit to be done with different Opam switches.
-  # --------------
-
-  # [2] Run r-c-ocaml-1-setup.sh
-  [
-    "env"
-      "DKML_REPRODUCIBLE_SYSTEM_BREWFILE=%{_:build}%/Brewfile"
-      "bash"
-      "dkmldir/vendor/dkml-compiler/src/r-c-ocaml-1-setup.sh"
-      "-d" "dkmldir"
-      "-f" "src/ocaml-2"
-      "-r" # Build runtime only
-      "-k" "vendor/dkml-compiler/env/standard-compiler-env-to-ocaml-configure-env.sh"
-      "-v" "dl/ocaml"
-      #   Host-compile into staging-files/<host-abi>
-      "-t" "%{_:share}%/staging-files"
-      "-pwindows_x86"     { os = "win32" }
-      #   ABIs
-      "-ewindows_x86"     { os = "win32" }
-  ] { !(os = "macos") & !(os = "linux") }
-
-  # [2] Run r-c-ocaml-2-build_host-noargs.sh
-  [
-    "sh" "-eufc"
-    "cd '%{_:share}%/staging-files' && echo 2 - host && share/dkml/repro/100co/vendor/dkml-compiler/src/r-c-ocaml-2-build_host-noargs.sh"
-  ] { !(os = "macos") & !(os = "linux") }
 
   # --------------
   # Clean build files
