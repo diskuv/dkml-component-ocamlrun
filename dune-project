@@ -19,7 +19,7 @@
  (depends
   dkml-host-abi
   (dkml-install (>= 0.4.0))
-  (dkml-runtime-common (>= 1.0.2~prerel9))
+  (dkml-runtime-common (>= 2.1.2))
   (dkml-compiler-src (>= 2.1.0))
   (diskuvbox (>= 0.1.0))))
 
