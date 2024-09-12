@@ -166,7 +166,7 @@ jobs:
         working-directory: _asset
 
       - name: Bundle up multi-ABI asset
-        run:  tar cvCfz _asset $GITHUB_WORKSPACE/$COMPONENT.tar.gz .
+        run:  tar cvCfz _asset $GITHUB_WORKSPACE/dkml-component-staging-ocamlrun.tar.gz .
 
       - name: Release
         uses: softprops/action-gh-release@v2
